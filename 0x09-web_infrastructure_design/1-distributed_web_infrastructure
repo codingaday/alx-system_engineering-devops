@@ -1,0 +1,49 @@
+
+WHITE_BOARD LINK: https://docs.google.com/document/d/1-3vLfBsztf1zvMdnjBEcnNXzI5nd8lTDs0bhESiVjNE/edit?usp=sharing
+
+Whiteboard Design: Three-server distributed web infrastructure for www.foobar.com
+
+
+Breakdown:
+Server 1: Load Balancer running HAProxy
+
+Receives all client requests
+
+Distributes traffic in Round Robin fashion between Server 2 and Server 3
+
+Server 2 & Server 3: Each runs:
+
+Nginx (web server) to handle HTTP requests and static content
+
+Application server (your code base) to process business logic
+
+Database: MySQL in Primary-Replica configuration
+
+Primary handles all writes
+
+Replica handles reads, replicates data asynchronously or semi-sync
+
+Additional notes:
+Load Balancer distribution algorithm: Round Robin — cycles through servers evenly
+
+Active-Active vs Active-Passive:
+
+Currently Active-Passive since only 1 load balancer exists (no failover load balancer)
+
+Primary vs Replica DB:
+
+Primary handles writes, Replica handles reads
+
+Replica stays slightly behind Primary but improves read scalability
+
+SPOF:
+
+Load balancer (single node)
+
+Database Primary node
+
+Security & monitoring issues:
+
+No HTTPS termination or firewall configured
+
+No monitoring or logging set up

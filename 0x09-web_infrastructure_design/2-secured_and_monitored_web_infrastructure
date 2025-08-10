@@ -1,0 +1,104 @@
+
+WHITE_BOARD LINK: https://docs.google.com/document/d/1coqdqHK49PVJvc_NY212vmdkieukVVyQza_Srn1RBRQ/edit?usp=sharing
+
+1. Infrastructure Design
+Components:
+3 Servers:
+
+Server 1: Load Balancer + SSL termination + Firewall
+
+Server 2: Application Server + Firewall + Monitoring Client
+
+Server 3: Database Server (MySQL) + Firewall + Monitoring Client
+
+SSL Certificate installed on the Load Balancer to serve HTTPS for www.foobar.com.
+
+3 Firewalls:
+
+One firewall per server (or at least one dedicated firewall controlling network traffic to each server)
+
+3 Monitoring Clients:
+
+Installed on each server, collecting metrics and logs sent to an external monitoring service like Sumologic.
+
+2. Explanation of Each Added Element
+Firewalls (3 total)
+Purpose: Firewalls act as a security barrier, controlling incoming and outgoing network traffic based on predefined security rules.
+
+Why 3? To secure each server individually. This minimizes attack surface and isolates critical components from direct exposure to the internet or each other unless necessary.
+
+Firewalls prevent unauthorized access, block suspicious traffic, and help enforce network segmentation.
+
+SSL Certificate
+Purpose: To encrypt all traffic between users and www.foobar.com.
+
+Why HTTPS?
+
+Encrypts data to prevent eavesdropping and man-in-the-middle attacks.
+
+Builds trust with users by showing a secure padlock in browsers.
+
+Required for SEO ranking and compliance with security standards.
+
+The SSL certificate is installed on the load balancer to terminate HTTPS connections.
+
+Monitoring Clients (3 total)
+Installed on each server (Load Balancer, Application Server, Database Server).
+
+Purpose:
+
+Collect logs (e.g., access logs, error logs)
+
+Collect performance metrics (CPU, memory, disk usage)
+
+Collect application-specific metrics (like requests per second, errors)
+
+These data are sent to a central monitoring service (e.g., Sumologic) for analysis, alerting, and visualization.
+
+3. How Monitoring Tool Collects Data
+Monitoring clients run as lightweight agents on each server.
+
+They collect system metrics via APIs or log files.
+
+The clients push data continuously or at regular intervals to the monitoring backend over secure channels (e.g., HTTPS or encrypted TCP).
+
+Monitoring dashboards then visualize this data, allowing real-time and historical analysis.
+
+4. How to Monitor Web Server QPS (Queries Per Second)
+Enable detailed request logging on the web server.
+
+Use monitoring agents to parse access logs or expose metrics via APIs (e.g., Prometheus endpoint).
+
+Alternatively, instrument application code to emit metrics about requests served.
+
+These metrics are aggregated and visualized in the monitoring dashboard.
+
+Alerts can be set to notify you if QPS spikes or drops unexpectedly.
+
+5. Issues / Weaknesses with this Infrastructure
+1. Terminating SSL at the Load Balancer Level
+Issue: Traffic between the load balancer and backend servers is unencrypted.
+
+Why problematic? This internal traffic can be intercepted or tampered with if the network is not fully trusted or compromised.
+
+Possible fix: Use end-to-end encryption with SSL passthrough or re-encrypt traffic between load balancer and backend servers.
+
+2. Having Only One MySQL Server Capable of Accepting Writes
+Issue: Single point of failure for database writes.
+
+Why problematic? If the MySQL server crashes, writes stop, causing service disruption.
+
+Possible fix: Implement database replication with failover or clustering to ensure high availability.
+
+3. Having Servers with All the Same Components (Database, Web Server, Application Server)
+Issue: Lack of role separation and scaling difficulties.
+
+Why problematic?
+
+Performance bottlenecks if all functions run on the same server.
+
+Difficult to scale specific parts independently.
+
+Harder to troubleshoot and maintain.
+
+Best practice: Separate servers for database, application, and web services.
