@@ -1,0 +1,89 @@
+LINK: https://docs.google.com/document/d/1bdMnIEsmJ2CvfmdUrkZ37Jjv64jsg1WAIQbYnB_wXmA/edit?usp=sharing
+
+Simple Web Stack Design for www.foobar.com
+Infrastructure Overview
+A user wants to access the website www.foobar.com. Here is how the request flows through the infrastructure hosted on a single server with the IP address 8.8.8.8.
+
+Components:
+1 Server: A physical or virtual machine with IP 8.8.8.8.
+
+1 Web Server (Nginx): Handles incoming HTTP/HTTPS requests.
+
+1 Application Server: Runs the web application code (e.g., Django, Node.js, PHP-FPM).
+
+1 Application Files: The source code and assets of the website.
+
+1 Database (MySQL): Stores persistent data needed by the application.
+
+1 Domain Name (foobar.com): With a DNS www record pointing to 8.8.8.8.
+
+Step-by-Step Explanation
+User Request
+
+The user enters www.foobar.com in their browser.
+
+DNS Resolution
+
+The browser queries the DNS system to resolve www.foobar.com. The DNS www record is a CNAME or A record that points to the server’s IP address 8.8.8.8.
+
+Web Server (Nginx)
+
+The browser sends an HTTP/HTTPS request to 8.8.8.8 on port 80/443. Nginx listens for this request and acts as a reverse proxy.
+
+Application Server
+
+Nginx forwards the request to the application server that runs the website’s backend code. This could be PHP-FPM, Gunicorn for Python, etc.
+
+Application Files
+
+The application server executes the code files located on the server to process the request.
+
+Database (MySQL)
+
+The application queries the MySQL database as needed to fetch or update data.
+
+Response
+
+The application generates a response (HTML, JSON, etc.), which is sent back through Nginx to the user’s browser.
+
+Specifics Explained
+What is a server?
+
+A server is a powerful computer designed to store data and run services accessible over a network.
+
+What is the role of the domain name?
+
+The domain name (foobar.com) provides a human-friendly address to reach the server's IP (8.8.8.8).
+
+What type of DNS record is www in www.foobar.com?
+
+Usually an A record (points directly to an IP) or a CNAME record (points to another domain).
+
+What is the role of the web server?
+
+The web server (Nginx) handles client HTTP requests, serves static files, and proxies dynamic requests to the application server.
+
+What is the role of the application server?
+
+Runs the backend code that processes business logic, interacts with the database, and generates dynamic content.
+
+What is the role of the database?
+
+Stores persistent data such as user accounts, content, and transactions.
+
+What is the server using to communicate with the user’s computer?
+
+The communication uses the HTTP/HTTPS protocols over TCP/IP.
+
+Issues with this Infrastructure
+Single Point of Failure (SPOF):
+
+If the server goes down, the entire website becomes unavailable.
+
+Downtime during maintenance:
+
+Deploying new code or restarting the web server causes downtime.
+
+Lack of scalability:
+
+Cannot handle high traffic spikes efficiently; no load balancing or replication.
